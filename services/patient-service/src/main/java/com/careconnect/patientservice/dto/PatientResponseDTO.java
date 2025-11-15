@@ -1,4 +1,4 @@
-package com.careconnect.patientservice.dto;
+package com.careconnect.appointmentservice.dto;
 
 import lombok.Builder;
 import lombok.Data;

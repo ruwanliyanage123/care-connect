@@ -1,6 +1,6 @@
-package com.careconnect.patientservice.repository;
+package com.careconnect.appointmentservice.repository;
 
-import com.careconnect.patientservice.entity.Patient;
+import com.careconnect.appointmentservice.entity.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

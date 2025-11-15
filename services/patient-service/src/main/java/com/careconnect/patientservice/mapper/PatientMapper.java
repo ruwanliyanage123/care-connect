@@ -1,9 +1,9 @@
-package com.careconnect.patientservice.mapper;
+package com.careconnect.appointmentservice.mapper;
 
-import com.careconnect.patientservice.dto.PatientRequestDTO;
-import com.careconnect.patientservice.dto.PatientResponseDTO;
-import com.careconnect.patientservice.dto.PatientUpdateDTO;
-import com.careconnect.patientservice.entity.Patient;
+import com.careconnect.appointmentservice.dto.PatientRequestDTO;
+import com.careconnect.appointmentservice.dto.PatientResponseDTO;
+import com.careconnect.appointmentservice.dto.PatientUpdateDTO;
+import com.careconnect.appointmentservice.entity.Patient;
 import org.springframework.stereotype.Component;
 
 @Component

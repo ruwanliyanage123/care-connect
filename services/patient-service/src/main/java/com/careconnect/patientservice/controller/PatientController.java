@@ -1,11 +1,11 @@
-package com.careconnect.patientservice.controller;
+package com.careconnect.appointmentservice.controller;
 
-import com.careconnect.patientservice.dto.EmergencyContactDTO;
-import com.careconnect.patientservice.dto.MedicalInfoDTO;
-import com.careconnect.patientservice.dto.PatientRequestDTO;
-import com.careconnect.patientservice.dto.PatientResponseDTO;
-import com.careconnect.patientservice.dto.PatientUpdateDTO;
-import com.careconnect.patientservice.service.PatientService;
+import com.careconnect.appointmentservice.dto.EmergencyContactDTO;
+import com.careconnect.appointmentservice.dto.MedicalInfoDTO;
+import com.careconnect.appointmentservice.dto.PatientRequestDTO;
+import com.careconnect.appointmentservice.dto.PatientResponseDTO;
+import com.careconnect.appointmentservice.dto.PatientUpdateDTO;
+import com.careconnect.appointmentservice.service.PatientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

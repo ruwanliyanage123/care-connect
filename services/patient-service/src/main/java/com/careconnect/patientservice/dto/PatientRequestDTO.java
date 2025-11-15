@@ -1,4 +1,4 @@
-package com.careconnect.patientservice.dto;
+package com.careconnect.appointmentservice.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
