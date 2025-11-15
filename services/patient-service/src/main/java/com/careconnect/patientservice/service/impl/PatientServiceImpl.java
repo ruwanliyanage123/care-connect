@@ -1,15 +1,15 @@
-package com.careconnect.appointmentservice.service.impl;
+package com.careconnect.consultantservice.service.impl;
 
-import com.careconnect.appointmentservice.dto.EmergencyContactDTO;
-import com.careconnect.appointmentservice.dto.MedicalInfoDTO;
-import com.careconnect.appointmentservice.dto.PatientRequestDTO;
-import com.careconnect.appointmentservice.dto.PatientResponseDTO;
-import com.careconnect.appointmentservice.dto.PatientUpdateDTO;
-import com.careconnect.appointmentservice.entity.Patient;
-import com.careconnect.appointmentservice.exception.PatientNotFoundException;
-import com.careconnect.appointmentservice.mapper.PatientMapper;
-import com.careconnect.appointmentservice.repository.PatientRepository;
-import com.careconnect.appointmentservice.service.PatientService;
+import com.careconnect.consultantservice.dto.EmergencyContactDTO;
+import com.careconnect.consultantservice.dto.MedicalInfoDTO;
+import com.careconnect.consultantservice.dto.PatientRequestDTO;
+import com.careconnect.consultantservice.dto.PatientResponseDTO;
+import com.careconnect.consultantservice.dto.PatientUpdateDTO;
+import com.careconnect.consultantservice.entity.Patient;
+import com.careconnect.consultantservice.exception.PatientNotFoundException;
+import com.careconnect.consultantservice.mapper.PatientMapper;
+import com.careconnect.consultantservice.repository.PatientRepository;
+import com.careconnect.consultantservice.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;

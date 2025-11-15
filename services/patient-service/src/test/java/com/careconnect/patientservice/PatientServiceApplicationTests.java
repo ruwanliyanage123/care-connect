@@ -1,4 +1,4 @@
-package com.careconnect.appointmentservice;
+package com.careconnect.consultantservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

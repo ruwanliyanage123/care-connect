@@ -1,4 +1,4 @@
-package com.careconnect.appointmentservice.exception;
+package com.careconnect.consultantservice.exception;
 
 public class PatientNotFoundException extends RuntimeException {
     public PatientNotFoundException(String message) {

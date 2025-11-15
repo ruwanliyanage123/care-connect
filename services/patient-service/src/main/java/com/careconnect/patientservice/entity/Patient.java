@@ -1,4 +1,4 @@
-package com.careconnect.appointmentservice.entity;
+package com.careconnect.consultantservice.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

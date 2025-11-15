@@ -1,4 +1,4 @@
-package com.careconnect.appointmentservice.exception;
+package com.careconnect.consultantservice.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

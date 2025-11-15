@@ -1,10 +1,10 @@
-package com.careconnect.appointmentservice.service;
+package com.careconnect.consultantservice.service;
 
-import com.careconnect.appointmentservice.dto.EmergencyContactDTO;
-import com.careconnect.appointmentservice.dto.MedicalInfoDTO;
-import com.careconnect.appointmentservice.dto.PatientRequestDTO;
-import com.careconnect.appointmentservice.dto.PatientResponseDTO;
-import com.careconnect.appointmentservice.dto.PatientUpdateDTO;
+import com.careconnect.consultantservice.dto.EmergencyContactDTO;
+import com.careconnect.consultantservice.dto.MedicalInfoDTO;
+import com.careconnect.consultantservice.dto.PatientRequestDTO;
+import com.careconnect.consultantservice.dto.PatientResponseDTO;
+import com.careconnect.consultantservice.dto.PatientUpdateDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
