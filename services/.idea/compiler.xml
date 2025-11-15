@@ -7,7 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
       </profile>
-      <profile name="Annotation profile for consultant-service" enabled="true">
+      <profile name="Annotation profile for medication-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -15,14 +15,22 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.32/lombok-1.18.32.jar" />
         </processorPath>
         <module name="consultant-service" />
-        <module name="appointment-service" />
         <module name="appointment-service (1)" />
+        <module name="payment-service" />
+        <module name="appointment-service" />
+        <module name="report-service" />
+        <module name="patient-service" />
+        <module name="medication-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="appointment-service" target="17" />
       <module name="appointment-service (1)" target="17" />
       <module name="consultant-service" target="17" />
+      <module name="medication-service" target="17" />
+      <module name="patient-service" target="17" />
+      <module name="payment-service" target="17" />
+      <module name="report-service" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -30,6 +38,10 @@
       <module name="appointment-service" options="-parameters" />
       <module name="appointment-service (1)" options="-parameters" />
       <module name="consultant-service" options="-parameters" />
+      <module name="medication-service" options="-parameters" />
+      <module name="patient-service" options="-parameters" />
+      <module name="payment-service" options="-parameters" />
+      <module name="report-service" options="-parameters" />
     </option>
   </component>
 </project>
