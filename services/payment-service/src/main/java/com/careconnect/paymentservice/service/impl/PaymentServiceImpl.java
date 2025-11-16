@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +27,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class PaymentServiceImpl implements PaymentService {
-
     private final InvoiceRepository invoiceRepository;
     private final PaymentRepository paymentRepository;
     private final PaymentMapper billingMapper;
@@ -56,21 +58,15 @@ public class PaymentServiceImpl implements PaymentService {
     public PaymentResponseDTO recordPayment(PaymentRequestDTO requestDTO) {
         Invoice invoice = invoiceRepository.findById(requestDTO.getInvoiceId())
                 .orElseThrow(() -> new EntityNotFoundException("Invoice not found: " + requestDTO.getInvoiceId()));
-
-        // Save payment
         Payment payment = billingMapper.toPaymentEntity(requestDTO, invoice);
         payment = paymentRepository.save(payment);
-
-        // Optionally: update invoice status when fully paid
-        BigDecimal paidAmount = paymentRepository.findByInvoice_Id(invoice.getId()).stream()
+        BigDecimal totalPaid = paymentRepository.findByInvoice_Id(invoice.getId()).stream()
                 .map(Payment::getAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        if (paidAmount.compareTo(invoice.getTotalAmount()) >= 0) {
+        if (totalPaid.compareTo(invoice.getTotalAmount()) >= 0) {
             invoice.setStatus(InvoiceStatus.PAID);
             invoiceRepository.save(invoice);
         }
-
         return billingMapper.toPaymentResponseDTO(payment);
     }
 
@@ -80,5 +76,29 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentRepository.findByInvoice_Id(invoiceId).stream()
                 .map(billingMapper::toPaymentResponseDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BigDecimal getRevenueBetween(LocalDate from, LocalDate to) {
+        OffsetDateTime start = from.atStartOfDay().atOffset(ZoneOffset.UTC);
+        OffsetDateTime end   = to.atTime(23, 59, 59).atOffset(ZoneOffset.UTC);
+        return paymentRepository.sumRevenueBetween(start, end);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BigDecimal getTodayRevenue() {
+        LocalDate today = LocalDate.now();
+        return getRevenueBetween(today, today);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public BigDecimal getMonthToDateRevenue() {
+        LocalDate today = LocalDate.now();
+        LocalDate firstOfMonth = today.withDayOfMonth(1);
+
+        return getRevenueBetween(firstOfMonth, today);
     }
 }

@@ -5,6 +5,8 @@ import com.careconnect.paymentservice.dto.InvoiceResponseDTO;
 import com.careconnect.paymentservice.dto.PaymentRequestDTO;
 import com.careconnect.paymentservice.dto.PaymentResponseDTO;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface PaymentService {
@@ -18,4 +20,10 @@ public interface PaymentService {
     PaymentResponseDTO recordPayment(PaymentRequestDTO requestDTO);
 
     List<PaymentResponseDTO> getPaymentsForInvoice(Long invoiceId);
+
+    BigDecimal getRevenueBetween(LocalDate from, LocalDate to);
+
+    BigDecimal getTodayRevenue();
+
+    BigDecimal getMonthToDateRevenue();
 }

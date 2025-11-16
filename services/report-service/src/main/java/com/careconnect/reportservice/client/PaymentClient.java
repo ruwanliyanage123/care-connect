@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @Component
 @RequiredArgsConstructor
 public class PaymentClient {
-
     private final WebClient webClient;
 
     @Value("${careconnect.payment-service.base-url}")
@@ -20,27 +19,21 @@ public class PaymentClient {
 
     public Mono<BigDecimal> getTodayRevenue() {
         LocalDate today = LocalDate.now();
-
         return getRevenueBetween(today, today);
     }
 
     public Mono<BigDecimal> getMonthToDateRevenue() {
         LocalDate today = LocalDate.now();
         LocalDate firstDay = today.withDayOfMonth(1);
-
         return getRevenueBetween(firstDay, today);
     }
 
     public Mono<BigDecimal> getRevenueBetween(LocalDate from, LocalDate to) {
         return webClient.get()
-                .uri(uri -> uri.path(baseUrl)
-                        .queryParam("from", from.toString())
-                        .queryParam("to", to.toString())
-                        .build())
+                .uri(baseUrl + "/revenue?from=" + from + "&to=" + to)
                 .retrieve()
-                .bodyToFlux(PaymentResponse.class)
-                .map(PaymentResponse::amount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .bodyToMono(BigDecimal.class)
+                .defaultIfEmpty(BigDecimal.ZERO);
     }
 
     public record PaymentResponse(

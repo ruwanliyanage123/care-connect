@@ -14,6 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
 @Service
 @RequiredArgsConstructor
 public class AppointmentServiceImpl implements AppointmentService {
@@ -37,19 +42,19 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Page<AppointmentResponseDTO> getByPatient(Long patientId, Pageable pageable) {
-        return appointmentRepository.findByPatientId(patientId,pageable)
+        return appointmentRepository.findByPatientId(patientId, pageable)
                 .map(appointmentMapper::toResponse);
     }
 
     @Override
     public Page<AppointmentResponseDTO> getByConsultant(Long consultantId, Pageable pageable) {
-        return appointmentRepository.findByConsultantId(consultantId,pageable)
+        return appointmentRepository.findByConsultantId(consultantId, pageable)
                 .map(appointmentMapper::toResponse);
     }
 
     @Override
     public Page<AppointmentResponseDTO> getByStatus(String status, Pageable pageable) {
-        return appointmentRepository.findByStatus(status,pageable)
+        return appointmentRepository.findByStatus(status, pageable)
                 .map(appointmentMapper::toResponse);
     }
 
@@ -57,7 +62,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentResponseDTO update(Long id, AppointmentUpdateDTO updateDTO) {
         Appointment entity = appointmentRepository.findById(id)
                 .orElseThrow(() -> new AppointmentNotFoundException(id));
-        appointmentMapper.applyUpdate(updateDTO,entity);
+
+        appointmentMapper.applyUpdate(updateDTO, entity);
+
         Appointment saved = appointmentRepository.save(entity);
         return appointmentMapper.toResponse(saved);
     }
@@ -66,8 +73,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentResponseDTO updateStatus(Long id, AppointmentStatusUpdateDTO statusDTO) {
         Appointment entity = appointmentRepository.findById(id)
                 .orElseThrow(() -> new AppointmentNotFoundException(id));
+
         entity.setStatus(statusDTO.getStatus());
         Appointment saved = appointmentRepository.save(entity);
+
         return appointmentMapper.toResponse(saved);
     }
 
@@ -77,4 +86,12 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .orElseThrow(() -> new AppointmentNotFoundException(id));
         appointmentRepository.delete(entity);
     }
+
+    @Override
+    public long countBetweenDates(LocalDate from, LocalDate to) {
+        OffsetDateTime start = from.atStartOfDay().atOffset(ZoneOffset.UTC);
+        OffsetDateTime end = to.atTime(23, 59, 59).atOffset(ZoneOffset.UTC);
+        return appointmentRepository.countByAppointmentDateTimeBetween(start, end);
+    }
+
 }
