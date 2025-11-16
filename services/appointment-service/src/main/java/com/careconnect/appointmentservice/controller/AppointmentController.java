@@ -89,10 +89,10 @@ public class AppointmentController {
     public ResponseEntity<Long> getAppointmentCountBetween(
             @RequestParam("from") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam("to") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
-
         long count = appointmentService.countBetweenDates(from, to);
         return ResponseEntity.ok(count);
     }
+
 
     @GetMapping("/count")
     public ResponseEntity<Long> getTotalAppointmentCount() {

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
@@ -15,5 +16,5 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     Page<Appointment> findByStatus(String status, Pageable pageable);
 
-    long countByAppointmentDateTimeBetween(OffsetDateTime from, OffsetDateTime to);
+    long countByAppointmentDateTimeBetween(LocalDateTime start, LocalDateTime end);
 }

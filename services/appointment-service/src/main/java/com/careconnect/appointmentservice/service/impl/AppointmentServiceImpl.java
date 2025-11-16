@@ -89,9 +89,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public long countBetweenDates(LocalDate from, LocalDate to) {
-        OffsetDateTime start = from.atStartOfDay().atOffset(ZoneOffset.UTC);
-        OffsetDateTime end = to.atTime(23, 59, 59).atOffset(ZoneOffset.UTC);
+        LocalDateTime start = from.atStartOfDay(); // 2025-11-01T00:00
+        LocalDateTime end = to.atTime(23, 59, 59); // 2025-11-30T23:59:59
         return appointmentRepository.countByAppointmentDateTimeBetween(start, end);
     }
-
 }
