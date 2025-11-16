@@ -15,4 +15,5 @@ public interface ConsultantService {
     List<ConsultantResponseDTO> getBySpecialization(String specialization);
     ConsultantResponseDTO activateConsultant(Long id);
     ConsultantResponseDTO deactivateConsultant(Long id);
+    long getConsultantCount();
 }

@@ -43,6 +43,11 @@ public class ConsultantController {
         return ResponseEntity.ok(consultantService.getAllConsultants());
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> getConsultantCount() {
+        return ResponseEntity.ok(consultantService.getConsultantCount());
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ConsultantResponseDTO> updateConsultant(
             @PathVariable Long id,

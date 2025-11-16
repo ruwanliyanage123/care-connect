@@ -95,4 +95,9 @@ public class ConsultantServiceImpl implements ConsultantService {
         consultant = consultantRepository.save(consultant);
         return consultantMapper.toResponseDTO(consultant);
     }
+
+    @Override
+    public long getConsultantCount() {
+        return consultantRepository.count();
+    }
 }
