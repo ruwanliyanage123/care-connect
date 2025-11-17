@@ -7,19 +7,20 @@
     "build": "webpack --config webpack.config.js --mode production"
   },
   "dependencies": {
+    "lucide-react": "^0.554.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "autoprefixer": "^10.4.20",
+    "autoprefixer": "^10.4.22",
     "css-loader": "^7.1.2",
     "html-webpack-plugin": "^5.6.0",
-    "postcss": "^8.4.49",
+    "postcss": "^8.5.6",
     "postcss-loader": "^8.1.1",
     "style-loader": "^4.0.0",
-    "tailwindcss": "^3.4.15",
+    "tailwindcss": "^3.4.18",
     "ts-loader": "^9.5.1",
     "typescript": "^5.7.2",
     "webpack": "^5.96.1",
