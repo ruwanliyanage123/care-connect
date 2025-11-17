@@ -4,6 +4,7 @@ import { Link, Route, Routes, useLocation } from "react-router-dom";
 const DashboardApp = React.lazy(() => import("care_connect_dashboard/DashboardApp"));
 const PatientsApp = React.lazy(() => import("care_connect_patients/PatientsApp"));
 const ConsultantsApp = React.lazy(() => import("care_connect_consultants/ConsultantsApp"));
+const AppointmentsApp = React.lazy(() => import("care_connect_appointments/AppointmentsApp"));
 
 
 export default function App() {
@@ -36,7 +37,14 @@ export default function App() {
                         </Suspense>
                     }
                 />
-                <Route path="/appointments" element={<ComingSoon title="Appointments" />} />
+                <Route
+                    path="/appointments"
+                    element={
+                        <Suspense fallback={<Loading text="Loading Patients..." />}>
+                            <AppointmentsApp />
+                        </Suspense>
+                    }
+                />
                 <Route path="/billing" element={<ComingSoon title="Billing" />} />
             </Routes>
         </Layout>

@@ -8,7 +8,7 @@ module.exports = {
     mode: "development",
 
     devServer: {
-        port: 4100,
+        port: 4103,
         historyApiFallback: true,
         hot: true
     },
@@ -38,12 +38,10 @@ module.exports = {
 
     plugins: [
         new ModuleFederationPlugin({
-            name: "care_connect_root",
-            remotes: {
-                care_connect_dashboard: "care_connect_dashboard@http://localhost:4101/remoteEntry.js",
-                care_connect_consultants: "care_connect_consultants@http://localhost:4102/remoteEntry.js",
-                care_connect_appointments: "care_connect_appointments@http://localhost:4103/remoteEntry.js",
-                care_connect_patients: "care_connect_patients@http://localhost:4104/remoteEntry.js"
+            name: "care_connect_appointments",
+            filename: "remoteEntry.js",
+            exposes: {
+                "./AppointmentsApp": "./src/AppointmentsApp.tsx"
             },
             shared: {
                 react: {
@@ -52,11 +50,6 @@ module.exports = {
                     eager: false
                 },
                 "react-dom": {
-                    singleton: true,
-                    requiredVersion: false,
-                    eager: false
-                },
-                "react-router-dom": {
                     singleton: true,
                     requiredVersion: false,
                     eager: false
