@@ -14,7 +14,8 @@ module.exports = {
     },
 
     output: {
-        publicPath: "auto"
+        publicPath: "auto",
+        clean: true
     },
 
     resolve: {
@@ -43,8 +44,16 @@ module.exports = {
                 "./DashboardApp": "./src/DashboardApp.tsx"
             },
             shared: {
-                react: { singleton: true, requiredVersion: deps.react },
-                "react-dom": { singleton: true, requiredVersion: deps["react-dom"] }
+                react: {
+                    singleton: true,
+                    requiredVersion: false,
+                    eager: false
+                },
+                "react-dom": {
+                    singleton: true,
+                    requiredVersion: false,
+                    eager: false
+                }
             }
         }),
 

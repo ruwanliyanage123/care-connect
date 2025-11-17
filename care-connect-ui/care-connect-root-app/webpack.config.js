@@ -14,7 +14,8 @@ module.exports = {
     },
 
     output: {
-        publicPath: "auto"
+        publicPath: "auto",
+        clean: true
     },
 
     resolve: {
@@ -42,9 +43,21 @@ module.exports = {
                 care_connect_dashboard: "care_connect_dashboard@http://localhost:4101/remoteEntry.js"
             },
             shared: {
-                react: { singleton: true, requiredVersion: deps.react },
-                "react-dom": { singleton: true, requiredVersion: deps["react-dom"] },
-                "react-router-dom": { singleton: true, requiredVersion: deps["react-router-dom"] }
+                react: {
+                    singleton: true,
+                    requiredVersion: false,
+                    eager: false
+                },
+                "react-dom": {
+                    singleton: true,
+                    requiredVersion: false,
+                    eager: false
+                },
+                "react-router-dom": {
+                    singleton: true,
+                    requiredVersion: false,
+                    eager: false
+                }
             }
         }),
 
