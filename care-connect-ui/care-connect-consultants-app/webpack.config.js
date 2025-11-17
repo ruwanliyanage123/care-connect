@@ -8,7 +8,7 @@ module.exports = {
     mode: "development",
 
     devServer: {
-        port: 4101,
+        port: 4102,
         historyApiFallback: true,
         hot: true
     },
@@ -38,10 +38,10 @@ module.exports = {
 
     plugins: [
         new ModuleFederationPlugin({
-            name: "care_connect_dashboard",
+            name: "care_connect_consultants",
             filename: "remoteEntry.js",
             exposes: {
-                "./DashboardApp": "./src/ConsultantsApp.tsx"
+                "./ConsultantsApp": "./src/ConsultantsApp.tsx"
             },
             shared: {
                 react: {

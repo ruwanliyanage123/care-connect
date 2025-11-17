@@ -3,6 +3,8 @@ import { Link, Route, Routes, useLocation } from "react-router-dom";
 
 const DashboardApp = React.lazy(() => import("care_connect_dashboard/DashboardApp"));
 const PatientsApp = React.lazy(() => import("care_connect_patients/PatientsApp"));
+const ConsultantsApp = React.lazy(() => import("care_connect_consultants/ConsultantsApp"));
+
 
 export default function App() {
     return (
@@ -26,7 +28,14 @@ export default function App() {
                     }
                 />
 
-                <Route path="/consultants" element={<ComingSoon title="Consultants" />} />
+                <Route
+                    path="/consultants"
+                    element={
+                        <Suspense fallback={<Loading text="Loading Patients..." />}>
+                            <ConsultantsApp />
+                        </Suspense>
+                    }
+                />
                 <Route path="/appointments" element={<ComingSoon title="Appointments" />} />
                 <Route path="/billing" element={<ComingSoon title="Billing" />} />
             </Routes>

@@ -41,6 +41,7 @@ module.exports = {
             name: "care_connect_root",
             remotes: {
                 care_connect_dashboard: "care_connect_dashboard@http://localhost:4101/remoteEntry.js",
+                care_connect_consultants: "care_connect_consultants@http://localhost:4102/remoteEntry.js",
                 care_connect_patients: "care_connect_patients@http://localhost:4104/remoteEntry.js"
             },
             shared: {
