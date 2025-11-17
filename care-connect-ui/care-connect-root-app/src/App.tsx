@@ -5,6 +5,7 @@ const DashboardApp = React.lazy(() => import("care_connect_dashboard/DashboardAp
 const PatientsApp = React.lazy(() => import("care_connect_patients/PatientsApp"));
 const ConsultantsApp = React.lazy(() => import("care_connect_consultants/ConsultantsApp"));
 const AppointmentsApp = React.lazy(() => import("care_connect_appointments/AppointmentsApp"));
+const PaymentsApp = React.lazy(() => import("care_connect_payments/PaymentsApp"));
 
 
 export default function App() {
@@ -32,7 +33,7 @@ export default function App() {
                 <Route
                     path="/consultants"
                     element={
-                        <Suspense fallback={<Loading text="Loading Patients..." />}>
+                        <Suspense fallback={<Loading text="Loading Consultants..." />}>
                             <ConsultantsApp />
                         </Suspense>
                     }
@@ -40,12 +41,19 @@ export default function App() {
                 <Route
                     path="/appointments"
                     element={
-                        <Suspense fallback={<Loading text="Loading Patients..." />}>
+                        <Suspense fallback={<Loading text="Loading Appointments..." />}>
                             <AppointmentsApp />
                         </Suspense>
                     }
                 />
-                <Route path="/billing" element={<ComingSoon title="Billing" />} />
+                <Route
+                    path="/billing"
+                    element={
+                        <Suspense fallback={<Loading text="Loading Payments..." />}>
+                            <PaymentsApp />
+                        </Suspense>
+                    }
+                />
             </Routes>
         </Layout>
     );
