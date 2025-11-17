@@ -1,70 +1,105 @@
 import React, { Suspense } from "react";
 import { Link, Route, Routes } from "react-router-dom";
 
-console.log("🔵 Root App Loaded");
-
-// Load remote MFE
 const DashboardApp = React.lazy(() => import("care_connect_dashboard/DashboardApp"));
 
 export default function App() {
     return (
-        <div className="min-h-screen flex flex-col bg-gray-50">
+        <div className="flex h-screen bg-gray-100">
 
-            {/* Header */}
-            <header className="bg-sky-700 text-white px-6 py-4 shadow flex justify-between items-center">
-                <h1 className="text-2xl font-bold">CareConnect Portal</h1>
-
-                <nav className="space-x-6 text-lg">
-                    <Link to="/" className="hover:underline">Dashboard</Link>
-                    <Link to="/patients" className="hover:underline">Patients</Link>
-                    <Link to="/consultants" className="hover:underline">Consultants</Link>
-                    <Link to="/appointments" className="hover:underline">Appointments</Link>
-                    <Link to="/billing" className="hover:underline">Billing</Link>
-                </nav>
-            </header>
-
-            {/* Main Body */}
-            <main className="flex-1 p-6">
-
-                <div className="mb-4 p-3 bg-yellow-100 border border-yellow-300 rounded">
-                    <p className="text-yellow-800 font-semibold">
-                        🟡 Root App Loaded — Waiting for Dashboard MFE (4101)
-                    </p>
+            {/* Sidebar */}
+            <aside className="w-64 bg-white shadow-lg border-r">
+                <div className="p-6 border-b">
+                    <h1 className="text-2xl font-bold text-sky-700">CareConnect</h1>
+                    <p className="text-sm text-gray-500 mt-1">Healthcare Portal</p>
                 </div>
 
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            <Suspense
-                                fallback={
-                                    <div className="text-blue-600 text-xl font-semibold">
-                                        🔄 Loading Dashboard Microfrontend...
-                                    </div>
-                                }
-                            >
-                                <div className="mb-4 p-3 bg-green-100 border border-green-300 rounded">
-                                    <p className="text-green-800 font-semibold">
-                                        🟢 Dashboard MFE Loaded Successfully!
-                                    </p>
-                                </div>
+                <nav className="px-4 py-6 space-y-2">
+                    <Link
+                        to="/"
+                        className="block px-4 py-2 rounded-lg hover:bg-sky-100 text-gray-700 font-medium"
+                    >
+                        🏠 Dashboard
+                    </Link>
 
-                                <DashboardApp />
-                            </Suspense>
-                        }
-                    />
+                    <Link
+                        to="/patients"
+                        className="block px-4 py-2 rounded-lg hover:bg-sky-100 text-gray-700 font-medium"
+                    >
+                        👨‍⚕️ Patients
+                    </Link>
 
-                    <Route path="/patients" element={<div className="text-xl">Patients MFE (coming soon)</div>} />
-                    <Route path="/consultants" element={<div className="text-xl">Consultants MFE (coming soon)</div>} />
-                    <Route path="/appointments" element={<div className="text-xl">Appointments MFE (coming soon)</div>} />
-                    <Route path="/billing" element={<div className="text-xl">Billing MFE (coming soon)</div>} />
-                </Routes>
-            </main>
+                    <Link
+                        to="/consultants"
+                        className="block px-4 py-2 rounded-lg hover:bg-sky-100 text-gray-700 font-medium"
+                    >
+                        🩺 Consultants
+                    </Link>
 
-            {/* Footer */}
-            <footer className="bg-gray-200 text-center py-2 text-sm text-gray-600">
-                CareConnect © 2025 — Microfrontend Architecture Demo
-            </footer>
+                    <Link
+                        to="/appointments"
+                        className="block px-4 py-2 rounded-lg hover:bg-sky-100 text-gray-700 font-medium"
+                    >
+                        📅 Appointments
+                    </Link>
+
+                    <Link
+                        to="/billing"
+                        className="block px-4 py-2 rounded-lg hover:bg-sky-100 text-gray-700 font-medium"
+                    >
+                        💳 Billing
+                    </Link>
+                </nav>
+            </aside>
+
+            {/* Main Content Area */}
+            <div className="flex-1 flex flex-col">
+
+                {/* Top Bar */}
+                <header className="h-16 bg-white shadow px-6 flex justify-between items-center">
+                    <h2 className="text-xl font-semibold text-gray-700">Welcome, Admin</h2>
+
+                    <div className="flex items-center gap-4">
+                        <button className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700">
+                            + New Appointment
+                        </button>
+
+                        <div className="w-10 h-10 rounded-full bg-sky-300 flex items-center justify-center font-bold text-white">
+                            RL
+                        </div>
+                    </div>
+                </header>
+
+                {/* Page Content */}
+                <main className="p-6 overflow-auto">
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={
+                                <Suspense fallback={<div>Loading dashboard...</div>}>
+                                    <DashboardApp />
+                                </Suspense>
+                            }
+                        />
+
+                        <Route path="/patients" element={<ComingSoon title="Patients" />} />
+                        <Route path="/consultants" element={<ComingSoon title="Consultants" />} />
+                        <Route path="/appointments" element={<ComingSoon title="Appointments" />} />
+                        <Route path="/billing" element={<ComingSoon title="Billing" />} />
+                    </Routes>
+                </main>
+            </div>
+        </div>
+    );
+}
+
+function ComingSoon({ title }: { title: string }) {
+    return (
+        <div className="text-center mt-20">
+            <h2 className="text-3xl font-bold text-gray-700">{title} MFE Coming Soon</h2>
+            <p className="text-gray-500 mt-3">
+                This module will be implemented as a separate microfrontend.
+            </p>
         </div>
     );
 }
