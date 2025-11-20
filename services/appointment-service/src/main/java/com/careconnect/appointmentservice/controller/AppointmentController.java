@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @RestController
+@CrossOrigin(origins = {"*"})
 @RequestMapping("/api/v1/appointments")
 @RequiredArgsConstructor
 public class AppointmentController {
