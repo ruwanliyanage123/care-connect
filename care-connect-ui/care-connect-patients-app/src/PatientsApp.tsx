@@ -1,34 +1,43 @@
-import React, { useState } from "react";
-import "./global.css";
-
-interface Patient {
-    id: number;
-    name: string;
-    age: number;
-    gender: string;
-    contact: string;
-    status: string;
-}
-
-const dummyPatients: Patient[] = [
-    { id: 1, name: "John Doe", age: 34, gender: "Male", contact: "0771234567", status: "Active" },
-    { id: 2, name: "Jane Smith", age: 28, gender: "Female", contact: "0759876543", status: "Active" },
-    { id: 3, name: "Michael Lee", age: 45, gender: "Male", contact: "0717654321", status: "Inactive" },
-];
+import React, { useEffect, useState } from "react";
+import { getAllPatients, Patient } from "./api/patientApi";
 
 const PatientsApp: React.FC = () => {
+    const [patients, setPatients] = useState<Patient[]>([]);
     const [search, setSearch] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    useEffect(() => {
+        const loadPatients = async () => {
+            try {
+                setLoading(true);
+                setError(null);
 
-    const filtered = dummyPatients.filter((p) =>
-        p.name.toLowerCase().includes(search.toLowerCase())
+                const data = await getAllPatients();
+                setPatients(Array.isArray(data) ? data : []);
+            } catch (err) {
+                console.error("Failed to fetch patients:", err);
+                setError("Failed to load patients from backend.");
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadPatients();
+    }, []);
+
+    // 🔥 SAFE FILTERING (no more crash)
+    const filtered = patients.filter((p) =>
+        (p.name ?? "")
+            .toString()
+            .toLowerCase()
+            .includes(search.toLowerCase())
     );
 
     return (
         <div className="p-6 w-full">
-            {/* Header */}
+            {/* Page Header */}
             <h1 className="text-3xl font-bold mb-4 text-gray-800">Patients</h1>
 
-            {/* Search Input */}
+            {/* Search Box */}
             <div className="mb-6">
                 <input
                     type="text"
@@ -39,70 +48,81 @@ const PatientsApp: React.FC = () => {
                 />
             </div>
 
-            {/* Stats Section */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div className="bg-blue-100 p-4 rounded-xl shadow">
-                    <p className="text-sm text-gray-700">Total Patients</p>
-                    <h2 className="text-2xl font-bold">{dummyPatients.length}</h2>
-                </div>
-                <div className="bg-green-100 p-4 rounded-xl shadow">
-                    <p className="text-sm text-gray-700">Active</p>
-                    <h2 className="text-2xl font-bold">
-                        {dummyPatients.filter((p) => p.status === "Active").length}
-                    </h2>
-                </div>
-                <div className="bg-red-100 p-4 rounded-xl shadow">
-                    <p className="text-sm text-gray-700">Inactive</p>
-                    <h2 className="text-2xl font-bold">
-                        {dummyPatients.filter((p) => p.status === "Inactive").length}
-                    </h2>
-                </div>
-            </div>
+            {/* Loading */}
+            {loading && (
+                <p className="text-gray-500 text-lg mb-4">
+                    Loading patients from backend...
+                </p>
+            )}
 
-            {/* Patient Table */}
-            <div className="bg-white shadow rounded-xl overflow-hidden">
-                <table className="min-w-full table-auto">
-                    <thead className="bg-gray-100">
-                    <tr>
-                        <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">ID</th>
-                        <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Name</th>
-                        <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Age</th>
-                        <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Gender</th>
-                        <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Contact</th>
-                        <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Status</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {filtered.length === 0 ? (
+            {/* Error */}
+            {error && (
+                <p className="text-red-600 text-lg mb-4">
+                    {error}
+                </p>
+            )}
+
+            {/* Table */}
+            {!loading && !error && (
+                <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
+                    <table className="min-w-full table-auto">
+                        <thead className="bg-gray-50">
                         <tr>
-                            <td colSpan={6} className="text-center py-4 text-gray-500">
-                                No patients found.
-                            </td>
+                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                ID
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Name
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Age
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Gender
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                Contact
+                            </th>
                         </tr>
-                    ) : (
-                        filtered.map((p) => (
-                            <tr
-                                key={p.id}
-                                className="border-b hover:bg-gray-50 transition-all"
-                            >
-                                <td className="px-4 py-2">{p.id}</td>
-                                <td className="px-4 py-2 font-medium">{p.name}</td>
-                                <td className="px-4 py-2">{p.age}</td>
-                                <td className="px-4 py-2">{p.gender}</td>
-                                <td className="px-4 py-2">{p.contact}</td>
-                                <td
-                                    className={`px-4 py-2 font-semibold ${
-                                        p.status === "Active" ? "text-green-700" : "text-red-700"
-                                    }`}
-                                >
-                                    {p.status}
+                        </thead>
+
+                        <tbody className="text-sm text-gray-700">
+                        {filtered.length === 0 ? (
+                            <tr>
+                                <td colSpan={5} className="text-center py-6 text-gray-500">
+                                    No patients found.
                                 </td>
                             </tr>
-                        ))
-                    )}
-                    </tbody>
-                </table>
-            </div>
+                        ) : (
+                            filtered.map((p, index) => (
+                                <tr
+                                    key={p.id}
+                                    className={`border-b transition-all duration-200 
+                      ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                      hover:bg-blue-50 hover:cursor-pointer`}
+                                >
+                                    <td className="px-6 py-4 font-medium text-gray-800">
+                                        {p.id ?? "-"}
+                                    </td>
+                                    <td className="px-6 py-4 font-semibold">
+                                        {p.name ?? "N/A"}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {p.age ?? "N/A"}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {p.gender ?? "N/A"}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {p.contact ?? "N/A"}
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                        </tbody>
+                    </table>
+                </div>
+            )}
         </div>
     );
 };
