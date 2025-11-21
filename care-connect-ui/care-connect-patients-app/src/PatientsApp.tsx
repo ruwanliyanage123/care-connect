@@ -1,14 +1,18 @@
+// ===================================
+// PatientsApp.tsx
+// ===================================
 import React, { useEffect, useState } from "react";
 import {
     getAllPatients,
     createPatient,
     updatePatient,
     deletePatient,
-    Patient
+    Patient,
+    BackendPatientPayload
 } from "./api/patientApi";
-import './global.css'
 
 import PatientModal from "./components/PatientModal";
+import "./global.css";
 
 const PatientsApp: React.FC = () => {
     const [patients, setPatients] = useState<Patient[]>([]);
@@ -24,7 +28,7 @@ const PatientsApp: React.FC = () => {
             setLoading(true);
             const data = await getAllPatients();
             setPatients(data);
-        } catch (err) {
+        } catch {
             setError("Failed to load patients.");
         } finally {
             setLoading(false);
@@ -36,17 +40,17 @@ const PatientsApp: React.FC = () => {
     }, []);
 
     const filtered = patients.filter((p) =>
-        (p.name ?? "").toLowerCase().includes(search.toLowerCase())
+        p.name.toLowerCase().includes(search.toLowerCase())
     );
 
-    const handleCreate = async (patient: Patient) => {
-        await createPatient(patient);
+    const handleCreate = async (data: BackendPatientPayload) => {
+        await createPatient(data);
         loadPatients();
     };
 
-    const handleEdit = async (patient: Patient) => {
-        if (!editData?.id) return;
-        await updatePatient(editData.id, patient);
+    const handleEdit = async (data: BackendPatientPayload) => {
+        if (!editData) return;
+        await updatePatient(editData.id, data);
         loadPatients();
     };
 
@@ -59,42 +63,43 @@ const PatientsApp: React.FC = () => {
     return (
         <div className="p-6 w-full">
 
-            {/* Header */}
             <h1 className="text-3xl font-bold mb-4 text-gray-800">Patients</h1>
 
-            {/* Search + Add Button */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
 
                 <input
                     type="text"
-                    placeholder="Search patients by name..."
-                    className="w-full md:w-1/3 px-4 py-2 border rounded-xl shadow-sm"
+                    placeholder="Search patients..."
+                    className="w-full md:w-1/3 px-4 py-2 border rounded-xl shadow-sm focus:ring"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
 
                 <button
-                    onClick={() => { setEditData(null); setModalOpen(true); }}
                     className="px-4 py-2 bg-healthcare-primary text-white rounded-lg hover:bg-healthcare-primaryDark"
+                    onClick={() => { setEditData(null); setModalOpen(true); }}
                 >
                     + Add Patient
                 </button>
+
             </div>
 
             {loading && <p>Loading...</p>}
             {error && <p className="text-red-500">{error}</p>}
 
-            {/* Table */}
-            <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
-                <table className="min-w-full">
-                    <thead className="bg-gray-50">
+            <div className="bg-white shadow-xl rounded-2xl border border-gray-200 overflow-x-auto">
+
+                <table className="min-w-full text-sm text-gray-700">
+                    <thead className="bg-gray-100 text-gray-600">
                     <tr>
-                        <th className="px-6 py-3">ID</th>
-                        <th className="px-6 py-3">Name</th>
-                        <th className="px-6 py-3">Age</th>
-                        <th className="px-6 py-3">Gender</th>
-                        <th className="px-6 py-3">Contact</th>
-                        <th className="px-6 py-3">Actions</th>
+                        <th className="px-6 py-3 text-left font-semibold">ID</th>
+                        <th className="px-6 py-3 text-left font-semibold">Name</th>
+                        <th className="px-6 py-3 text-left font-semibold">Age</th>
+                        <th className="px-6 py-3 text-left font-semibold">Gender</th>
+                        <th className="px-6 py-3 text-left font-semibold">Contact</th>
+                        <th className="px-6 py-3 text-left font-semibold min-w-[170px]">
+                            Actions
+                        </th>
                     </tr>
                     </thead>
 
@@ -102,7 +107,9 @@ const PatientsApp: React.FC = () => {
                     {filtered.map((p, index) => (
                         <tr
                             key={p.id}
-                            className={`border-b ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
+                            className={`${index % 2 === 0
+                                ? "bg-white"
+                                : "bg-gray-50"} border-b`}
                         >
                             <td className="px-6 py-4">{p.id}</td>
                             <td className="px-6 py-4">{p.name}</td>
@@ -111,35 +118,29 @@ const PatientsApp: React.FC = () => {
                             <td className="px-6 py-4">{p.contact}</td>
 
                             <td className="px-6 py-4 flex gap-3">
+
                                 <button
+                                    className="px-4 py-1.5 bg-healthcare-blue text-white rounded-md hover:bg-blue-800 transition"
                                     onClick={() => { setEditData(p); setModalOpen(true); }}
-                                    className="text-blue-600 hover:underline"
                                 >
                                     Edit
                                 </button>
 
                                 <button
-                                    onClick={() => handleDelete(p.id!)}
-                                    className="text-red-600 hover:underline"
+                                    className="px-4 py-1.5 bg-healthcare-danger text-white rounded-md hover:bg-red-700 transition"
+                                    onClick={() => handleDelete(p.id)}
                                 >
                                     Delete
                                 </button>
+
                             </td>
                         </tr>
                     ))}
-
-                    {filtered.length === 0 && (
-                        <tr>
-                            <td colSpan={6} className="text-center py-6 text-gray-500">
-                                No patients found.
-                            </td>
-                        </tr>
-                    )}
                     </tbody>
+
                 </table>
             </div>
 
-            {/* Modal */}
             <PatientModal
                 isOpen={modalOpen}
                 onClose={() => setModalOpen(false)}
