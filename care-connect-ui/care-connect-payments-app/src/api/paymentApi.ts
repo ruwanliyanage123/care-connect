@@ -15,7 +15,7 @@ export interface Payment {
     date: string;
 }
 
-const BASE_URL = "http://localhost:8082/api/v1/payments";
+const BASE_URL = "http://localhost:8084/api/v1/payments";
 
 export async function getAllInvoices(): Promise<Invoice[]> {
     const res = await fetch(`${BASE_URL}/invoices/patient/1`);
