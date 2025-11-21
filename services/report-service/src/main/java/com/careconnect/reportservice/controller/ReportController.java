@@ -12,6 +12,7 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDate;
 
 @RestController
+@CrossOrigin(origins = {"*"})
 @RequestMapping("/api/v1/reports")
 @RequiredArgsConstructor
 public class ReportController {
