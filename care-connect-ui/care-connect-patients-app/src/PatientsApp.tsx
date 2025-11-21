@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { getAllPatients, Patient } from "./api/patientApi";
+import {
+    getAllPatients,
+    createPatient,
+    updatePatient,
+    deletePatient,
+    Patient
+} from "./api/patientApi";
+import './global.css'
+
+import PatientModal from "./components/PatientModal";
 
 const PatientsApp: React.FC = () => {
     const [patients, setPatients] = useState<Patient[]>([]);
@@ -7,124 +16,137 @@ const PatientsApp: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const [modalOpen, setModalOpen] = useState(false);
+    const [editData, setEditData] = useState<Patient | null>(null);
+
+    const loadPatients = async () => {
+        try {
+            setLoading(true);
+            const data = await getAllPatients();
+            setPatients(data);
+        } catch (err) {
+            setError("Failed to load patients.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const loadPatients = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-
-                const data = await getAllPatients();
-                setPatients(Array.isArray(data) ? data : []);
-            } catch (err) {
-                console.error("Failed to fetch patients:", err);
-                setError("Failed to load patients from backend.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
         loadPatients();
     }, []);
 
-    // 🔥 SAFE FILTERING (no more crash)
     const filtered = patients.filter((p) =>
-        (p.name ?? "")
-            .toString()
-            .toLowerCase()
-            .includes(search.toLowerCase())
+        (p.name ?? "").toLowerCase().includes(search.toLowerCase())
     );
+
+    const handleCreate = async (patient: Patient) => {
+        await createPatient(patient);
+        loadPatients();
+    };
+
+    const handleEdit = async (patient: Patient) => {
+        if (!editData?.id) return;
+        await updatePatient(editData.id, patient);
+        loadPatients();
+    };
+
+    const handleDelete = async (id: number) => {
+        if (!confirm("Delete this patient?")) return;
+        await deletePatient(id);
+        loadPatients();
+    };
 
     return (
         <div className="p-6 w-full">
-            {/* Page Header */}
+
+            {/* Header */}
             <h1 className="text-3xl font-bold mb-4 text-gray-800">Patients</h1>
 
-            {/* Search Box */}
-            <div className="mb-6">
+            {/* Search + Add Button */}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+
                 <input
                     type="text"
                     placeholder="Search patients by name..."
-                    className="w-full md:w-1/3 px-4 py-2 border rounded-xl shadow-sm focus:ring focus:ring-blue-200"
+                    className="w-full md:w-1/3 px-4 py-2 border rounded-xl shadow-sm"
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
+
+                <button
+                    onClick={() => { setEditData(null); setModalOpen(true); }}
+                    className="px-4 py-2 bg-healthcare-primary text-white rounded-lg hover:bg-healthcare-primaryDark"
+                >
+                    + Add Patient
+                </button>
             </div>
 
-            {/* Loading */}
-            {loading && (
-                <p className="text-gray-500 text-lg mb-4">
-                    Loading patients from backend...
-                </p>
-            )}
-
-            {/* Error */}
-            {error && (
-                <p className="text-red-600 text-lg mb-4">
-                    {error}
-                </p>
-            )}
+            {loading && <p>Loading...</p>}
+            {error && <p className="text-red-500">{error}</p>}
 
             {/* Table */}
-            {!loading && !error && (
-                <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
-                    <table className="min-w-full table-auto">
-                        <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                ID
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Name
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Age
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Gender
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Contact
-                            </th>
-                        </tr>
-                        </thead>
+            <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-200">
+                <table className="min-w-full">
+                    <thead className="bg-gray-50">
+                    <tr>
+                        <th className="px-6 py-3">ID</th>
+                        <th className="px-6 py-3">Name</th>
+                        <th className="px-6 py-3">Age</th>
+                        <th className="px-6 py-3">Gender</th>
+                        <th className="px-6 py-3">Contact</th>
+                        <th className="px-6 py-3">Actions</th>
+                    </tr>
+                    </thead>
 
-                        <tbody className="text-sm text-gray-700">
-                        {filtered.length === 0 ? (
-                            <tr>
-                                <td colSpan={5} className="text-center py-6 text-gray-500">
-                                    No patients found.
-                                </td>
-                            </tr>
-                        ) : (
-                            filtered.map((p, index) => (
-                                <tr
-                                    key={p.id}
-                                    className={`border-b transition-all duration-200 
-                      ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                      hover:bg-blue-50 hover:cursor-pointer`}
+                    <tbody>
+                    {filtered.map((p, index) => (
+                        <tr
+                            key={p.id}
+                            className={`border-b ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}`}
+                        >
+                            <td className="px-6 py-4">{p.id}</td>
+                            <td className="px-6 py-4">{p.name}</td>
+                            <td className="px-6 py-4">{p.age}</td>
+                            <td className="px-6 py-4">{p.gender}</td>
+                            <td className="px-6 py-4">{p.contact}</td>
+
+                            <td className="px-6 py-4 flex gap-3">
+                                <button
+                                    onClick={() => { setEditData(p); setModalOpen(true); }}
+                                    className="text-blue-600 hover:underline"
                                 >
-                                    <td className="px-6 py-4 font-medium text-gray-800">
-                                        {p.id ?? "-"}
-                                    </td>
-                                    <td className="px-6 py-4 font-semibold">
-                                        {p.name ?? "N/A"}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {p.age ?? "N/A"}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {p.gender ?? "N/A"}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        {p.contact ?? "N/A"}
-                                    </td>
-                                </tr>
-                            ))
-                        )}
-                        </tbody>
-                    </table>
-                </div>
-            )}
+                                    Edit
+                                </button>
+
+                                <button
+                                    onClick={() => handleDelete(p.id!)}
+                                    className="text-red-600 hover:underline"
+                                >
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+
+                    {filtered.length === 0 && (
+                        <tr>
+                            <td colSpan={6} className="text-center py-6 text-gray-500">
+                                No patients found.
+                            </td>
+                        </tr>
+                    )}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* Modal */}
+            <PatientModal
+                isOpen={modalOpen}
+                onClose={() => setModalOpen(false)}
+                onSubmit={editData ? handleEdit : handleCreate}
+                initialData={editData}
+            />
+
         </div>
     );
 };
