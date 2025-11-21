@@ -134,12 +134,7 @@ function TopHeader() {
             <h2 className="text-xl font-semibold text-healthcare-text">
                 Welcome, Admin
             </h2>
-
             <div className="flex items-center gap-4">
-                <button className="px-4 py-2 bg-healthcare-primary text-white rounded-lg hover:bg-healthcare-primaryDark">
-                    + New Appointment
-                </button>
-
                 <div className="w-10 h-10 rounded-full bg-healthcare-success flex items-center justify-center font-bold text-white">
                     RL
                 </div>

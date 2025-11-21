@@ -6,6 +6,7 @@ const PatientsApp: React.FC = () => {
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
     useEffect(() => {
         const loadPatients = async () => {
             try {
@@ -21,6 +22,7 @@ const PatientsApp: React.FC = () => {
                 setLoading(false);
             }
         };
+
         loadPatients();
     }, []);
 

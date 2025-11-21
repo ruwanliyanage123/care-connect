@@ -1,4 +1,4 @@
-// src/api/appointmentApi.ts
+const APPOINTMENT_API_URL = "http://localhost:8081/api/v1/appointments";
 
 export interface Appointment {
     id: number;
@@ -9,7 +9,13 @@ export interface Appointment {
     status: string; // Upcoming / Completed / Cancelled etc.
 }
 
-const APPOINTMENT_API_URL = "http://localhost:8081/api/v1/appointments";
+export interface CreateAppointmentRequest {
+    patientId: number;
+    consultantId: number;
+    date: string;
+    time: string;
+    type: string;
+}
 
 // Small helper to safely format date/time if backend sends ISO string
 function splitDateTime(dateTime: string | null | undefined): { date: string; time: string } {
@@ -93,4 +99,19 @@ export async function getAllAppointments(): Promise<Appointment[]> {
     }
 
     return data.map(mapAppointment);
+}
+
+
+export async function createAppointment(req: CreateAppointmentRequest) {
+    const res = await fetch(APPOINTMENT_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(req)
+    });
+
+    if (!res.ok) {
+        throw new Error("Failed to create appointment");
+    }
+
+    return res.json();
 }

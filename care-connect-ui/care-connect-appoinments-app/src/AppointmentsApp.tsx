@@ -46,20 +46,56 @@ const dummyAppointments: Appointment[] = [
 ];
 
 const AppointmentsApp: React.FC = () => {
+    const [appointments, setAppointments] = useState(dummyAppointments);
     const [search, setSearch] = useState("");
 
-    const filtered = dummyAppointments.filter((a) =>
-        a.patient.toLowerCase().includes(search.toLowerCase()) ||
-        a.consultant.toLowerCase().includes(search.toLowerCase())
+    // Modal controls
+    const [showModal, setShowModal] = useState(false);
+
+    // Form fields
+    const [patient, setPatient] = useState("");
+    const [consultant, setConsultant] = useState("");
+    const [date, setDate] = useState("");
+    const [time, setTime] = useState("");
+
+    const filtered = appointments.filter(
+        (a) =>
+            a.patient.toLowerCase().includes(search.toLowerCase()) ||
+            a.consultant.toLowerCase().includes(search.toLowerCase())
     );
+
+    const addAppointment = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const newAppointment: Appointment = {
+            id: appointments.length + 1,
+            patient,
+            consultant,
+            date,
+            time,
+            status: "Upcoming",
+        };
+
+        setAppointments([newAppointment, ...appointments]);
+        setShowModal(false);
+
+        // Reset form
+        setPatient("");
+        setConsultant("");
+        setDate("");
+        setTime("");
+    };
 
     return (
         <div className="p-6 w-full">
-            {/* Page Header */}
+
+            {/* Page Title */}
             <h1 className="text-3xl font-bold mb-4 text-gray-800">Appointments</h1>
 
-            {/* Search Box */}
-            <div className="mb-6">
+            {/* Search + Button Row */}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+
+                {/* Search Box */}
                 <input
                     type="text"
                     placeholder="Search by patient or consultant..."
@@ -67,26 +103,35 @@ const AppointmentsApp: React.FC = () => {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
+
+                {/* New Appointment Button */}
+                <button
+                    onClick={() => setShowModal(true)}
+                    className="px-4 py-2 bg-healthcare-primary text-white rounded-lg hover:bg-healthcare-primaryDark"
+                >
+                    + New Appointment
+                </button>
             </div>
+
 
             {/* Summary Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div className="bg-blue-100 p-5 rounded-2xl shadow-md">
                     <p className="text-sm text-gray-600">Total Appointments</p>
-                    <h2 className="text-3xl font-bold">{dummyAppointments.length}</h2>
+                    <h2 className="text-3xl font-bold">{appointments.length}</h2>
                 </div>
 
                 <div className="bg-green-100 p-5 rounded-2xl shadow-md">
                     <p className="text-sm text-gray-600">Upcoming</p>
                     <h2 className="text-3xl font-bold">
-                        {dummyAppointments.filter((a) => a.status === "Upcoming").length}
+                        {appointments.filter((a) => a.status === "Upcoming").length}
                     </h2>
                 </div>
 
                 <div className="bg-red-100 p-5 rounded-2xl shadow-md">
                     <p className="text-sm text-gray-600">Cancelled</p>
                     <h2 className="text-3xl font-bold">
-                        {dummyAppointments.filter((a) => a.status === "Cancelled").length}
+                        {appointments.filter((a) => a.status === "Cancelled").length}
                     </h2>
                 </div>
             </div>
@@ -96,24 +141,12 @@ const AppointmentsApp: React.FC = () => {
                 <table className="min-w-full table-auto">
                     <thead className="bg-gray-50">
                     <tr>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            ID
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Patient
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Consultant
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Date
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Time
-                        </th>
-                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                            Status
-                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">ID</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Patient</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Consultant</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Date</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Time</th>
+                        <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
                     </tr>
                     </thead>
 
@@ -129,29 +162,28 @@ const AppointmentsApp: React.FC = () => {
                             <tr
                                 key={a.id}
                                 className={`border-b transition-all duration-200 
-                    ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}
-                    hover:bg-blue-50 hover:cursor-pointer`}
+                                    ${index % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                                    hover:bg-blue-50 hover:cursor-pointer`}
                             >
                                 <td className="px-6 py-4 font-medium text-gray-800">{a.id}</td>
                                 <td className="px-6 py-4 font-semibold">{a.patient}</td>
                                 <td className="px-6 py-4">{a.consultant}</td>
                                 <td className="px-6 py-4">{a.date}</td>
                                 <td className="px-6 py-4">{a.time}</td>
-
                                 <td className="px-6 py-4">
-                    <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold
-                        ${
-                            a.status === "Upcoming"
-                                ? "bg-blue-100 text-blue-800"
-                                : a.status === "Completed"
-                                    ? "bg-green-100 text-green-800"
-                                    : "bg-red-100 text-red-800"
-                        }
-                      `}
-                    >
-                      {a.status}
-                    </span>
+                                    <span
+                                        className={`px-3 py-1 rounded-full text-xs font-semibold
+                                            ${
+                                            a.status === "Upcoming"
+                                                ? "bg-blue-100 text-blue-800"
+                                                : a.status === "Completed"
+                                                    ? "bg-green-100 text-green-800"
+                                                    : "bg-red-100 text-red-800"
+                                        }
+                                        `}
+                                    >
+                                        {a.status}
+                                    </span>
                                 </td>
                             </tr>
                         ))
@@ -159,6 +191,69 @@ const AppointmentsApp: React.FC = () => {
                     </tbody>
                 </table>
             </div>
+
+            {/* MODAL */}
+            {showModal && (
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                    <form
+                        onSubmit={addAppointment}
+                        className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md space-y-4"
+                    >
+                        <h2 className="text-xl font-bold text-gray-800">New Appointment</h2>
+
+                        <input
+                            type="text"
+                            placeholder="Patient Name"
+                            className="w-full px-4 py-2 border rounded-lg"
+                            value={patient}
+                            onChange={(e) => setPatient(e.target.value)}
+                            required
+                        />
+
+                        <input
+                            type="text"
+                            placeholder="Consultant Name"
+                            className="w-full px-4 py-2 border rounded-lg"
+                            value={consultant}
+                            onChange={(e) => setConsultant(e.target.value)}
+                            required
+                        />
+
+                        <input
+                            type="date"
+                            className="w-full px-4 py-2 border rounded-lg"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            required
+                        />
+
+                        <input
+                            type="time"
+                            className="w-full px-4 py-2 border rounded-lg"
+                            value={time}
+                            onChange={(e) => setTime(e.target.value)}
+                            required
+                        />
+
+                        <div className="flex justify-end gap-2">
+                            <button
+                                type="button"
+                                className="px-4 py-2 bg-gray-300 rounded-lg"
+                                onClick={() => setShowModal(false)}
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                type="submit"
+                                className="px-4 py-2 bg-healthcare-primary text-white rounded-lg hover:bg-healthcare-primaryDark"
+                            >
+                                Save Appointment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            )}
         </div>
     );
 };
