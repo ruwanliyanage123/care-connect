@@ -120,7 +120,7 @@ const PatientsApp: React.FC = () => {
                             <td className="px-6 py-4 flex gap-3">
 
                                 <button
-                                    className="px-4 py-1.5 bg-healthcare-blue text-white rounded-md hover:bg-blue-800 transition"
+                                    className="px-4 py-1.5 bg-healthcare-primary text-white rounded-md hover:bg-healthcare-primaryDark transition"
                                     onClick={() => { setEditData(p); setModalOpen(true); }}
                                 >
                                     Edit
