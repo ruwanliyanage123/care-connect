@@ -5,7 +5,7 @@ import lombok.*;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "consultants")
+@Table(name = "consultants", schema = "consultant")
 @Getter
 @Setter
 @NoArgsConstructor

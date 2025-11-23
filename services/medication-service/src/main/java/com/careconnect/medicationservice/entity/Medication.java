@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "medications")
+@Table(name = "medications", schema="medication")
 @Getter
 @Setter
 @NoArgsConstructor
