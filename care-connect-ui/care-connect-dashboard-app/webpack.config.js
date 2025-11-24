@@ -5,7 +5,8 @@ const deps = require("./package.json").dependencies;
 module.exports = {
     entry: "./src/index.tsx",
 
-    mode: "development",
+    //mode: "development",
+    mode: "production",
 
     devServer: {
         port: 4101,
@@ -41,7 +42,7 @@ module.exports = {
             name: "care_connect_dashboard",
             filename: "remoteEntry.js",
             exposes: {
-                "./DashboardApp": "./src/ConsultantsApp.tsx"
+                "./DashboardApp": "./src/DashboardApp.tsx"
             },
             shared: {
                 react: {
