@@ -1,0 +1,97 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_REGION: "us-east-1"
+    AWS_ACCOUNT_ID: "682033490101"
+  privileged: true
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+    commands:
+      - echo "Installing Maven + Docker"
+      - mvn -version
+      - docker info
+
+  pre_build:
+    commands:
+      - echo "Logging into Amazon ECR..."
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+  build:
+    commands:
+      #########################################################
+      # PATIENT SERVICE
+      #########################################################
+      - echo "=== Building patient-service ==="
+      - cd services/patient-service
+      - mvn clean package -DskipTests
+      - docker buildx build --platform linux/amd64 -t care-connect-patient-service:latest .
+      - docker tag care-connect-patient-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/care-connect-patient-service:latest
+      - cd ../../
+
+      #########################################################
+      # APPOINTMENT SERVICE
+      #########################################################
+      - echo "=== Building appointment-service ==="
+      - cd services/appointment-service
+      - mvn clean package -DskipTests
+      - docker buildx build --platform linux/amd64 -t care-connect-appointment-service:latest .
+      - docker tag care-connect-appointment-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/care-connect-appointment-service:latest
+      - cd ../../
+
+      #########################################################
+      # CONSULTANT SERVICE
+      #########################################################
+      - echo "=== Building consultant-service ==="
+      - cd services/consultant-service
+      - mvn clean package -DskipTests
+      - docker buildx build --platform linux/amd64 -t care-connect-consultant-service:latest .
+      - docker tag care-connect-consultant-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/care-connect-consultant-service:latest
+      - cd ../../
+
+      #########################################################
+      # MEDICATION SERVICE
+      #########################################################
+      - echo "=== Building medication-service ==="
+      - cd services/medication-service
+      - mvn clean package -DskipTests
+      - docker buildx build --platform linux/amd64 -t care-connect-medication-service:latest .
+      - docker tag care-connect-medication-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/care-connect-medication-service:latest
+      - cd ../../
+
+      #########################################################
+      # PAYMENT SERVICE
+      #########################################################
+      - echo "=== Building payment-service ==="
+      - cd services/payment-service
+      - mvn clean package -DskipTests
+      - docker buildx build --platform linux/amd64 -t care-connect-payment-service:latest .
+      - docker tag care-connect-payment-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/care-connect-payment-service:latest
+      - cd ../../
+
+      #########################################################
+      # NOTIFICATION SERVICE (if needed)
+      #########################################################
+      - echo "=== Building notification-service ==="
+      - cd services/notification-service
+      - mvn clean package -DskipTests
+      - docker buildx build --platform linux/amd64 -t care-connect-notification-service:latest .
+      - docker tag care-connect-notification-service:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/care-connect-notification-service:latest
+      - cd ../../
+
+  post_build:
+    commands:
+      - echo "=== Pushing images to ECR ==="
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/care-connect-patient-service:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/care-connect-appointment-service:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/care-connect-consultant-service:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/care-connect-medication-service:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/care-connect-payment-service:latest
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/care-connect-notification-service:latest
+
+artifacts:
+  files:
+    - "**/*"
