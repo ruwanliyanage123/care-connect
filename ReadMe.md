@@ -1,8 +1,19 @@
-High-Level Architecture Diagram
+---
+
+# 🏥 Care-Connect — Healthcare Management Platform
+
+---
+![img_2.png](img_2.png)
+
+![img_1.png](img_1.png)
+
+![img.png](img.png)
+
+## High-Level Architecture Diagram
 
 ![img_1.png](high-level-arthitecture.png)
 
-Backend Architecture Diagram
+## Backend Architecture Diagram
 
 ![img_2.png](backend-architecture.png)
 
