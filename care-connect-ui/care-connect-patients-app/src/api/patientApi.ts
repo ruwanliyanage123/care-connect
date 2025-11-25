@@ -56,9 +56,8 @@ export interface BackendPatientPayload {
     emergencyContactPhone: string;
 }
 
-const PATIENT_API_URL = "http://localhost:8085/api/v1/patients";
+const PATIENT_API_URL = "http://care-connect-load-balancer-1655846048.us-east-1.elb.amazonaws.com/api/v1/patients";
 
-// Convert backend → UI Patient model
 function convertToPatientModel(p: BackendPatientResponse): Patient {
     return {
         id: p.id,
