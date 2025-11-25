@@ -1,15 +1,16 @@
-package com.careconnect.appointmentservice.controller;
+package com.careconnect.consultantservice.controller;
 
-import com.careconnect.appointmentservice.dto.ConsultantRequestDTO;
-import com.careconnect.appointmentservice.dto.ConsultantResponseDTO;
-import com.careconnect.appointmentservice.dto.ConsultantUpdateDTO;
-import com.careconnect.appointmentservice.service.ConsultantService;
+import com.careconnect.consultantservice.dto.ConsultantRequestDTO;
+import com.careconnect.consultantservice.dto.ConsultantResponseDTO;
+import com.careconnect.consultantservice.dto.ConsultantUpdateDTO;
+import com.careconnect.consultantservice.service.ConsultantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -18,7 +19,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class ConsultantController {
+
     private final ConsultantService consultantService;
+
+    @GetMapping("/health")
+    public String health() {
+        return "consultant-service OK";
+    }
 
     @PostMapping
     public ResponseEntity<ConsultantResponseDTO> createConsultant(@Valid @RequestBody ConsultantRequestDTO request) {
@@ -35,6 +42,7 @@ public class ConsultantController {
     public ResponseEntity<List<ConsultantResponseDTO>> listConsultants(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) String specialization) {
+
         if (name != null && !name.isBlank()) {
             return ResponseEntity.ok(consultantService.searchByName(name));
         }

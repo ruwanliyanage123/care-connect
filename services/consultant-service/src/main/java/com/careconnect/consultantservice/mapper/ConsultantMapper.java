@@ -1,15 +1,20 @@
-package com.careconnect.appointmentservice.mapper;
+package com.careconnect.consultantservice.mapper;
 
-import com.careconnect.appointmentservice.dto.ConsultantRequestDTO;
-import com.careconnect.appointmentservice.dto.ConsultantResponseDTO;
-import com.careconnect.appointmentservice.dto.ConsultantUpdateDTO;
-import com.careconnect.appointmentservice.entity.Consultant;
+
+import com.careconnect.consultantservice.dto.ConsultantRequestDTO;
+import com.careconnect.consultantservice.dto.ConsultantResponseDTO;
+import com.careconnect.consultantservice.dto.ConsultantUpdateDTO;
+import com.careconnect.consultantservice.entity.Consultant;
 import org.springframework.stereotype.Component;
+
+import java.time.OffsetDateTime;
 
 @Component
 public class ConsultantMapper {
+
     public Consultant toEntity(ConsultantRequestDTO dto) {
         if (dto == null) return null;
+
         return Consultant.builder()
                 .firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
@@ -21,11 +26,16 @@ public class ConsultantMapper {
                 .registrationNumber(dto.getRegistrationNumber())
                 .languages(dto.getLanguages())
                 .bio(dto.getBio())
+                .rating(0.0)
+                .active(true)
+                .createdAt(OffsetDateTime.now())
+                .updatedAt(OffsetDateTime.now())
                 .build();
     }
 
     public void applyUpdate(ConsultantUpdateDTO dto, Consultant consultant) {
         if (dto == null || consultant == null) return;
+
         if (dto.getFirstName() != null) consultant.setFirstName(dto.getFirstName());
         if (dto.getLastName() != null) consultant.setLastName(dto.getLastName());
         if (dto.getEmail() != null) consultant.setEmail(dto.getEmail());
@@ -36,11 +46,15 @@ public class ConsultantMapper {
         if (dto.getRegistrationNumber() != null) consultant.setRegistrationNumber(dto.getRegistrationNumber());
         if (dto.getLanguages() != null) consultant.setLanguages(dto.getLanguages());
         if (dto.getBio() != null) consultant.setBio(dto.getBio());
+        if (dto.getRating() != null) consultant.setRating(dto.getRating());
         if (dto.getActive() != null) consultant.setActive(dto.getActive());
+
+        consultant.setUpdatedAt(OffsetDateTime.now());
     }
 
     public ConsultantResponseDTO toResponseDTO(Consultant consultant) {
         if (consultant == null) return null;
+
         return ConsultantResponseDTO.builder()
                 .id(consultant.getId())
                 .firstName(consultant.getFirstName())

@@ -1,4 +1,4 @@
-package com.careconnect.appointmentservice;
+package com.careconnect.consultantservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

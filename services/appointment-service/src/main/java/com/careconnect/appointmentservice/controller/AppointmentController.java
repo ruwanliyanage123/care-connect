@@ -27,6 +27,11 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
 
+    @GetMapping("/health")
+    public String health() {
+        return "appointments-service OK";
+    }
+
     @PostMapping
     public ResponseEntity<AppointmentResponseDTO> create(
             @Valid @RequestBody AppointmentRequestDTO requestDTO) {

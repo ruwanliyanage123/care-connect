@@ -1,8 +1,10 @@
-package com.careconnect.appointmentservice.service;
+package com.careconnect.consultantservice.service;
 
-import com.careconnect.appointmentservice.dto.ConsultantRequestDTO;
-import com.careconnect.appointmentservice.dto.ConsultantResponseDTO;
-import com.careconnect.appointmentservice.dto.ConsultantUpdateDTO;
+
+import com.careconnect.consultantservice.dto.ConsultantRequestDTO;
+import com.careconnect.consultantservice.dto.ConsultantResponseDTO;
+import com.careconnect.consultantservice.dto.ConsultantUpdateDTO;
+
 import java.util.List;
 
 public interface ConsultantService {
