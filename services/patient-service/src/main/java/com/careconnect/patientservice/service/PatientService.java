@@ -1,12 +1,6 @@
 package com.careconnect.patientservice.service;
 
-import com.careconnect.patientservice.dto.EmergencyContactDTO;
-import com.careconnect.patientservice.dto.MedicalInfoDTO;
-import com.careconnect.patientservice.dto.PatientRequestDTO;
-import com.careconnect.patientservice.dto.PatientResponseDTO;
-import com.careconnect.patientservice.dto.PatientUpdateDTO;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.careconnect.patientservice.dto.*;
 
 import java.util.List;
 
@@ -20,7 +14,7 @@ public interface PatientService {
     PatientResponseDTO findByEmail(String email);
     PatientResponseDTO findByPhone(String phone);
     List<PatientResponseDTO> searchByName(String name);
-    Page<PatientResponseDTO> filterPatients(String city, String gender, String bloodGroup, Pageable pageable);
+    List<PatientResponseDTO> filterPatients(String city, String gender, String bloodGroup, int page, int size);
     PatientResponseDTO updateEmergencyContact(Long id, EmergencyContactDTO dto);
     PatientResponseDTO updateMedicalInfo(Long id, MedicalInfoDTO dto);
     List<PatientResponseDTO> getAllPatients();

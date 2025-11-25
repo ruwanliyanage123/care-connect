@@ -8,21 +8,17 @@ import com.careconnect.patientservice.dto.PatientUpdateDTO;
 import com.careconnect.patientservice.service.PatientService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 
 @CrossOrigin(origins = {"*"})
 @RestController
 @RequestMapping("/api/v1/patients")
 @RequiredArgsConstructor
 public class PatientController {
+
     private final PatientService patientService;
 
     @PostMapping
@@ -36,12 +32,14 @@ public class PatientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PatientResponseDTO> updatePatient(@PathVariable Long id, @Valid @RequestBody PatientUpdateDTO request) {
+    public ResponseEntity<PatientResponseDTO> updatePatient(@PathVariable Long id,
+                                                            @Valid @RequestBody PatientUpdateDTO request) {
         return ResponseEntity.ok(patientService.updatePatient(id, request));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<PatientResponseDTO> partialUpdate(@PathVariable Long id, @RequestBody PatientUpdateDTO request) {
+    public ResponseEntity<PatientResponseDTO> partialUpdate(@PathVariable Long id,
+                                                            @RequestBody PatientUpdateDTO request) {
         return ResponseEntity.ok(patientService.partialUpdate(id, request));
     }
 
@@ -52,12 +50,14 @@ public class PatientController {
     }
 
     @PatchMapping("/{id}/emergency-contact")
-    public ResponseEntity<PatientResponseDTO> updateEmergencyContact(@PathVariable Long id, @Valid @RequestBody EmergencyContactDTO dto) {
+    public ResponseEntity<PatientResponseDTO> updateEmergencyContact(@PathVariable Long id,
+                                                                     @Valid @RequestBody EmergencyContactDTO dto) {
         return ResponseEntity.ok(patientService.updateEmergencyContact(id, dto));
     }
 
     @PatchMapping("/{id}/medical-info")
-    public ResponseEntity<PatientResponseDTO> updateMedicalInfo(@PathVariable Long id, @RequestBody MedicalInfoDTO dto) {
+    public ResponseEntity<PatientResponseDTO> updateMedicalInfo(@PathVariable Long id,
+                                                                @RequestBody MedicalInfoDTO dto) {
         return ResponseEntity.ok(patientService.updateMedicalInfo(id, dto));
     }
 
@@ -96,13 +96,17 @@ public class PatientController {
         return ResponseEntity.ok(patientService.searchByName(name));
     }
 
+    /**
+     * CUSTOM PAGINATION (No Spring Data)
+     */
     @GetMapping("/filter")
-    public ResponseEntity<Page<PatientResponseDTO>> filterPatients(@RequestParam(required = false) String city,
-                                                                   @RequestParam(required = false) String gender,
-                                                                   @RequestParam(required = false) String bloodGroup,
-                                                                   @RequestParam(defaultValue = "0") int page,
-                                                                   @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("lastName", "firstName").ascending());
-        return ResponseEntity.ok(patientService.filterPatients(city, gender, bloodGroup, pageable));
+    public ResponseEntity<List<PatientResponseDTO>> filterPatients(
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String gender,
+            @RequestParam(required = false) String bloodGroup,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        return ResponseEntity.ok(patientService.filterPatients(city, gender, bloodGroup, page, size));
     }
 }
